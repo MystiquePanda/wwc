@@ -6,9 +6,10 @@ system "l ",.env.HOME,"/q/tbl.q";
 system "l ",.env.HOME,"/q/utils.q";
 system "l ",.env.HOME,"/q/load.q";
 system "l ",.env.HOME,"/q/static.q";
+system "l ",.env.HOME,"/q/ui.q";
 
 
-init:{
+daily_init:{
   DATE:.z.D;
   .load.download_owid_covid[DATE];
   .load.prepare_data_symlink[DATE];
@@ -16,12 +17,19 @@ init:{
   .load.covid[DATE];
  }
 
-d3:{
- `covid set select country:location^D3_COUNTRY_MAP[location],cases:total_cases from .data.covid where date=(max;date) fby location;
- `covid_timeline set select data:(`date`cases`deaths)!(date;total_cases;0^100*total_deaths%total_cases) by country:location^D3_COUNTRY_MAP[location],population,region:continent from .data.covid;
- }
 
-init[];
+save_dashboard_files:{[DIR]
+  `covid_cases_by_country set {(x[`country];x[`cases])}each .ui.lastest_covid_by_country[];
+  `covid_case_v_death_timeline set .ui.covid_case_v_death_timeline[];
+
+  {
+    f:hsym `$x,"/",(string y),".json";
+    f 0: enlist .j.j `.[y];
+  }[DIR;] each `covid_cases_by_country`covid_case_v_death_timeline
+  }
+
+daily_init[];
+save_dashboard_files[.env.HOME,"/data"];
 
 
 
