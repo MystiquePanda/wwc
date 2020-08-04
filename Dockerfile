@@ -6,10 +6,13 @@ MAINTAINER Jingran Dai
 # Ensure we have your our zipped version of q for linux in the same folder as this Dockerfile, and copy it
 COPY q wwc/q/.
 RUN mkdir wwc/data
+RUN mkdir wwc/log
 
 ENV APPHOME /wwc
 ENV APPPORT 4000
 
 RUN cd wwc
+
+CMD ["BG","wwc/q/wwc.q"]
 
 
