@@ -1,5 +1,7 @@
 \e 1
-system "l env.q";
+dir:system "dirname ",last .z.X;
+
+system raze "l ",dir,"/env.q";
 system "p ",string .env.PORT;
 
 system "l ",.env.HOME,"/q/tbl.q";
